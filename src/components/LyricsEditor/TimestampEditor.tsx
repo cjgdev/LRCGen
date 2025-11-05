@@ -91,7 +91,8 @@ export const TimestampEditor = () => {
           <Text size="sm" fw={500} mb="xs">
             Quick Adjust
           </Text>
-          <Group grow>
+          {/* Desktop: Single row */}
+          <Group grow visibleFrom="sm">
             <Button
               variant="light"
               leftSection={<IconPlayerTrackPrev size={16} />}
@@ -125,6 +126,45 @@ export const TimestampEditor = () => {
               +1.0s
             </Button>
           </Group>
+          {/* Mobile: 2x2 grid */}
+          <Stack gap="xs" hiddenFrom="sm">
+            <Group grow>
+              <Button
+                variant="light"
+                leftSection={<IconPlayerTrackPrev size={16} />}
+                onClick={() => handleQuickOffset(-1)}
+                disabled={lyrics.length === 0}
+              >
+                -1.0s
+              </Button>
+              <Button
+                variant="light"
+                leftSection={<IconPlayerTrackPrev size={16} />}
+                onClick={() => handleQuickOffset(-0.5)}
+                disabled={lyrics.length === 0}
+              >
+                -0.5s
+              </Button>
+            </Group>
+            <Group grow>
+              <Button
+                variant="light"
+                rightSection={<IconPlayerTrackNext size={16} />}
+                onClick={() => handleQuickOffset(0.5)}
+                disabled={lyrics.length === 0}
+              >
+                +0.5s
+              </Button>
+              <Button
+                variant="light"
+                rightSection={<IconPlayerTrackNext size={16} />}
+                onClick={() => handleQuickOffset(1)}
+                disabled={lyrics.length === 0}
+              >
+                +1.0s
+              </Button>
+            </Group>
+          </Stack>
         </div>
 
         <Divider />
@@ -133,7 +173,8 @@ export const TimestampEditor = () => {
           <Text size="sm" fw={500} mb="xs">
             Custom Offset
           </Text>
-          <Group>
+          {/* Desktop: Horizontal */}
+          <Group visibleFrom="sm">
             <NumberInput
               placeholder="Offset in seconds"
               value={offsetValue}
@@ -151,6 +192,25 @@ export const TimestampEditor = () => {
               Apply Offset
             </Button>
           </Group>
+          {/* Mobile: Vertical */}
+          <Stack gap="xs" hiddenFrom="sm">
+            <NumberInput
+              placeholder="Offset in seconds"
+              value={offsetValue}
+              onChange={(val) => setOffsetValue(Number(val) || 0)}
+              step={0.1}
+              decimalScale={2}
+              suffix="s"
+            />
+            <Button
+              fullWidth
+              leftSection={<IconAdjustments size={16} />}
+              onClick={handleApplyOffset}
+              disabled={lyrics.length === 0 || offsetValue === 0}
+            >
+              Apply Offset
+            </Button>
+          </Stack>
         </div>
 
         <Text size="xs" c="dimmed">

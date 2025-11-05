@@ -57,13 +57,14 @@ export const ExportPanel = () => {
       <Stack gap="md">
         <Text fw={500}>Export</Text>
 
-        <Group grow>
+        {/* Desktop: Two buttons side by side */}
+        <Group grow visibleFrom="sm">
           <Button
             leftSection={<IconDownload size={16} />}
             onClick={handleExport}
             disabled={lyrics.length === 0}
           >
-            Download LRC (Cmd/Ctrl+S)
+            Download LRC
           </Button>
 
           <Button
@@ -75,6 +76,28 @@ export const ExportPanel = () => {
             Copy to Clipboard
           </Button>
         </Group>
+
+        {/* Mobile: Stack vertically */}
+        <Stack gap="xs" hiddenFrom="sm">
+          <Button
+            fullWidth
+            leftSection={<IconDownload size={16} />}
+            onClick={handleExport}
+            disabled={lyrics.length === 0}
+          >
+            Download LRC (Cmd/Ctrl+S)
+          </Button>
+
+          <Button
+            fullWidth
+            variant="light"
+            leftSection={<IconFileExport size={16} />}
+            onClick={handleCopyToClipboard}
+            disabled={lyrics.length === 0}
+          >
+            Copy to Clipboard
+          </Button>
+        </Stack>
 
         <Text size="xs" c="dimmed">
           {lyrics.length} lyric {lyrics.length === 1 ? 'line' : 'lines'} ready

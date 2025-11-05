@@ -68,7 +68,10 @@ export const LyricsListView = () => {
       <Stack
         gap="xs"
         ref={listRef}
-        style={{ maxHeight: '400px', overflowY: 'auto' }}
+        style={{
+          maxHeight: 'min(400px, 50vh)',
+          overflowY: 'auto',
+        }}
       >
         {lyrics.map((line, index) => (
           <div

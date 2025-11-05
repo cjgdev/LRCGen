@@ -105,8 +105,8 @@ export const FileImportZone = () => {
       >
         <Group
           justify="center"
-          gap="xl"
-          style={{ minHeight: 120, pointerEvents: 'none' }}
+          gap="md"
+          style={{ minHeight: 120, pointerEvents: 'none', padding: '0.5rem' }}
         >
           <Dropzone.Accept>
             <IconUpload size={50} stroke={1.5} />
@@ -115,11 +115,22 @@ export const FileImportZone = () => {
             <IconMusic size={50} stroke={1.5} />
           </Dropzone.Idle>
 
-          <div>
-            <Text size="xl" inline fw={500}>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <Text
+              size="xl"
+              inline
+              fw={500}
+              style={{ fontSize: 'clamp(1rem, 4vw, 1.25rem)' }}
+            >
               {audioFile ? audioFile.name : 'Drag audio file here'}
             </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
+            <Text
+              size="sm"
+              c="dimmed"
+              inline
+              mt={7}
+              style={{ fontSize: 'clamp(0.75rem, 3vw, 0.875rem)' }}
+            >
               {audioFile
                 ? 'Drop a new file to replace'
                 : 'WAV, MP3, AAC, or FLAC (max 100MB)'}
@@ -136,8 +147,8 @@ export const FileImportZone = () => {
       >
         <Group
           justify="center"
-          gap="xl"
-          style={{ minHeight: 80, pointerEvents: 'none' }}
+          gap="md"
+          style={{ minHeight: 80, pointerEvents: 'none', padding: '0.5rem' }}
         >
           <Dropzone.Accept>
             <IconUpload size={40} stroke={1.5} />
@@ -146,11 +157,22 @@ export const FileImportZone = () => {
             <IconFileText size={40} stroke={1.5} />
           </Dropzone.Idle>
 
-          <div>
-            <Text size="lg" inline fw={500}>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <Text
+              size="lg"
+              inline
+              fw={500}
+              style={{ fontSize: 'clamp(0.875rem, 3.5vw, 1.125rem)' }}
+            >
               Import lyrics (optional)
             </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
+            <Text
+              size="sm"
+              c="dimmed"
+              inline
+              mt={7}
+              style={{ fontSize: 'clamp(0.75rem, 3vw, 0.875rem)' }}
+            >
               Drop .lrc or .txt file with lyrics
             </Text>
           </div>

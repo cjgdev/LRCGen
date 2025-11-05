@@ -28,10 +28,7 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
           <Text
             size="sm"
             c="dimmed"
-            style={{
-              display: 'none',
-              '@media (min-width: 768px)': { display: 'block' },
-            }}
+            visibleFrom="sm"
           >
             Create synchronized lyrics for your music
           </Text>

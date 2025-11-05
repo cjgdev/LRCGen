@@ -25,7 +25,14 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
       }}
     >
       <Group gap="sm" wrap="nowrap">
-        <Text size="sm" c="dimmed" style={{ minWidth: 60 }}>
+        <Text
+          size="xs"
+          c="dimmed"
+          style={{
+            minWidth: '50px',
+            fontSize: 'clamp(0.625rem, 2vw, 0.75rem)',
+          }}
+        >
           {formatTimestamp(line.timestamp)}
         </Text>
 
@@ -44,6 +51,8 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
           variant="subtle"
           onClick={() => deleteLyric(line.id)}
           aria-label="Delete line"
+          size="lg"
+          style={{ minWidth: 40, minHeight: 40 }}
         >
           <IconTrash size={18} />
         </ActionIcon>

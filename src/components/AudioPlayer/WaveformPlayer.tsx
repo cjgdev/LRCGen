@@ -39,11 +39,11 @@ export const WaveformPlayer = () => {
   return (
     <Paper p="md" withBorder>
       <Box mb="xs">
-        <Group justify="space-between">
+        <Group justify="space-between" wrap="nowrap">
           <Text size="sm" fw={500}>
             Waveform
           </Text>
-          <Group gap="xs">
+          <Group gap="xs" wrap="nowrap">
             <Group gap={4}>
               <Tooltip label="Zoom in">
                 <ActionIcon
@@ -52,6 +52,7 @@ export const WaveformPlayer = () => {
                   onClick={zoomIn}
                   disabled={!isReady}
                   aria-label="Zoom in"
+                  style={{ minWidth: 32, minHeight: 32 }}
                 >
                   <IconZoomIn size={16} />
                 </ActionIcon>
@@ -63,6 +64,7 @@ export const WaveformPlayer = () => {
                   onClick={zoomOut}
                   disabled={!isReady}
                   aria-label="Zoom out"
+                  style={{ minWidth: 32, minHeight: 32 }}
                 >
                   <IconZoomOut size={16} />
                 </ActionIcon>
@@ -74,12 +76,13 @@ export const WaveformPlayer = () => {
                   onClick={zoomReset}
                   disabled={!isReady}
                   aria-label="Reset zoom"
+                  style={{ minWidth: 32, minHeight: 32 }}
                 >
                   <IconZoomReset size={16} />
                 </ActionIcon>
               </Tooltip>
             </Group>
-            <Text size="sm" c="dimmed">
+            <Text size="xs" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
               {formatTime(currentTime)} / {formatTime(duration)}
             </Text>
           </Group>

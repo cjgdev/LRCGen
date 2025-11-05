@@ -52,8 +52,8 @@ export const AppLayout = () => {
     <div>
       <Header onShowHelp={() => setShowHelp(true)} />
 
-      <Container size="xl" py="xl">
-        <Stack gap="xl">
+      <Container size="xl" py="lg" px="md">
+        <Stack gap="lg">
           <FileImportZone />
 
           {showOnboarding && <OnboardingHints />}
@@ -64,7 +64,7 @@ export const AppLayout = () => {
 
               <PlaybackControls />
 
-              <Grid gutter="xl">
+              <Grid gutter="lg">
                 <Grid.Col span={{ base: 12, md: 4 }}>
                   <Stack gap="md">
                     <MetadataEditor />
