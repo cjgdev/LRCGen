@@ -38,27 +38,87 @@ npm run build
 
 ## Deployment
 
-### Deploy to Vercel (Recommended)
+### Automatic Deployment with GitHub Actions (Recommended)
 
-The easiest way to deploy is using Vercel:
+This project includes a GitHub Actions workflow for **automatic deployment to Vercel** on every push.
 
-1. **Option 1: Click the Deploy Button**
-   - Click the "Deploy with Vercel" button above
+#### Setup CI/CD (One-Time)
+
+1. **Create a Vercel Account**
+   - Go to [vercel.com](https://vercel.com) and sign up
    - Connect your GitHub account
-   - Vercel will auto-detect settings and deploy
 
-2. **Option 2: Vercel CLI**
+2. **Get Your Vercel Tokens**
+
    ```bash
+   # Install Vercel CLI
    npm i -g vercel
-   vercel
+
+   # Login and link project
+   vercel login
+   vercel link
    ```
 
-3. **Option 3: GitHub Integration**
-   - Push to GitHub
-   - Import project in Vercel dashboard
-   - Auto-deploys on every push
+   This creates a `.vercel/project.json` file with your IDs.
 
-### Deploy to Netlify
+3. **Get Vercel Token**
+   - Go to: https://vercel.com/account/tokens
+   - Click "Create Token"
+   - Name it "GitHub Actions"
+   - Copy the token
+
+4. **Add GitHub Secrets**
+
+   Go to your GitHub repo → Settings → Secrets and variables → Actions
+
+   Add these three secrets:
+
+   | Secret Name | Value | Where to Find |
+   |-------------|-------|---------------|
+   | `VERCEL_TOKEN` | Your token | From step 3 |
+   | `VERCEL_ORG_ID` | org_xxx | From `.vercel/project.json` |
+   | `VERCEL_PROJECT_ID` | prj_xxx | From `.vercel/project.json` |
+
+5. **Done!** 🎉
+
+   Now every push automatically:
+   - ✅ Builds your project
+   - ✅ Runs tests (if any)
+   - ✅ Deploys to Vercel
+   - ✅ Comments PR with preview URL
+
+#### How It Works
+
+- **Push to `main`** → Production deployment
+- **Push to feature branch** → Preview deployment
+- **Pull Request** → Preview deployment + comment with URL
+
+#### Workflow Features
+
+✅ Automatic dependency caching
+✅ Build artifact optimization
+✅ PR preview deployments
+✅ Production deployments on main
+✅ Deployment status in GitHub UI
+
+---
+
+### Manual Deployment Options
+
+#### Deploy with Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+#### Deploy to Netlify
 
 ```bash
 # Build the project
@@ -68,9 +128,9 @@ npm run build
 npx netlify-cli deploy --prod --dir=dist
 ```
 
-### Deploy to GitHub Pages
+#### One-Click Deploy Button
 
-Use the included GitHub Actions workflow in `.github/workflows/deploy.yml`
+Click the "Deploy with Vercel" button at the top of this README for instant deployment.
 
 ## Tech Stack
 
