@@ -91,4 +91,24 @@ export const useKeyboardShortcuts = ({
     },
     []
   );
+
+  // Undo - Cmd/Ctrl+Z
+  useHotkeys(
+    'mod+z',
+    (e) => {
+      e.preventDefault();
+      useAudioStore.getState().undo();
+    },
+    { enableOnFormTags: false }
+  );
+
+  // Redo - Cmd/Ctrl+Shift+Z
+  useHotkeys(
+    'mod+shift+z',
+    (e) => {
+      e.preventDefault();
+      useAudioStore.getState().redo();
+    },
+    { enableOnFormTags: false }
+  );
 };

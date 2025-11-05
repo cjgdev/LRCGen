@@ -20,6 +20,8 @@ export const KEYBOARD_SHORTCUTS = {
   general: {
     help: ['shift+/'],
     save: ['mod+s'],
+    undo: ['mod+z'],
+    redo: ['mod+shift+z'],
   },
 };
 
@@ -38,4 +40,6 @@ export const SHORTCUT_DESCRIPTIONS = {
   'shift+.': 'Increase speed',
   'shift+/': 'Show keyboard shortcuts',
   'mod+s': 'Export LRC file',
+  'mod+z': 'Undo',
+  'mod+shift+z': 'Redo',
 };

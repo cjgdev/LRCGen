@@ -3,6 +3,7 @@ import { Stack, Text, Paper, Button, Group } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useAudioStore } from '../../stores/audioStore';
 import { LyricLine } from './LyricLine';
+import { findActiveLyric } from '../../utils/lyricHelpers';
 
 export const LyricsListView = () => {
   const lyrics = useAudioStore((state) => state.lyrics);
@@ -15,19 +16,11 @@ export const LyricsListView = () => {
   const listRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
 
-  // Find active lyric based on current time
+  // Find active lyric based on current time using binary search
   useEffect(() => {
     if (lyrics.length === 0) return;
 
-    let activeIndex = -1;
-    for (let i = 0; i < lyrics.length; i++) {
-      if (currentTime >= lyrics[i].timestamp) {
-        activeIndex = i;
-      } else {
-        break;
-      }
-    }
-
+    const activeIndex = findActiveLyric(lyrics, currentTime);
     useAudioStore.getState().setActiveLyricIndex(activeIndex);
   }, [currentTime, lyrics]);
 

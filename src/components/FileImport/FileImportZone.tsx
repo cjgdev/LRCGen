@@ -56,7 +56,7 @@ export const FileImportZone = () => {
       // Check if it's an LRC file
       if (file.name.endsWith('.lrc')) {
         const { lyrics, metadata } = parseLRC(content);
-        setLyrics(lyrics);
+        setLyrics(lyrics, false); // Don't add import to history
         updateMetadata(metadata);
         notifications.show({
           title: 'LRC imported',
@@ -71,7 +71,7 @@ export const FileImportZone = () => {
           timestamp: 0,
           text: text.trim(),
         }));
-        setLyrics(lyrics);
+        setLyrics(lyrics, false); // Don't add import to history
         notifications.show({
           title: 'Lyrics imported',
           message: `Loaded ${lyrics.length} lines (no timestamps)`,

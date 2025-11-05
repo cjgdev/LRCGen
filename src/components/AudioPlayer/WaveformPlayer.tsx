@@ -1,13 +1,23 @@
+import { useEffect } from 'react';
 import { Box, Paper, Text, Group } from '@mantine/core';
 import { useWaveformPlayer } from '../../hooks/useWaveformPlayer';
 import { useAudioStore } from '../../stores/audioStore';
 import { formatTime } from '../../utils/timeFormatter';
 
 export const WaveformPlayer = () => {
-  const { containerRef, timelineRef, isReady } = useWaveformPlayer();
+  const { containerRef, timelineRef, isReady, syncRegionsWithLyrics } =
+    useWaveformPlayer();
   const currentTime = useAudioStore((state) => state.currentTime);
   const duration = useAudioStore((state) => state.duration);
   const audioUrl = useAudioStore((state) => state.audioUrl);
+  const lyrics = useAudioStore((state) => state.lyrics);
+
+  // Sync waveform region markers with lyrics
+  useEffect(() => {
+    if (isReady) {
+      syncRegionsWithLyrics();
+    }
+  }, [lyrics, isReady, syncRegionsWithLyrics]);
 
   if (!audioUrl) {
     return (

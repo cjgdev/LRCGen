@@ -6,6 +6,7 @@ import { WaveformPlayer } from '../AudioPlayer/WaveformPlayer';
 import { PlaybackControls } from '../AudioPlayer/PlaybackControls';
 import { MetadataEditor } from '../LyricsEditor/MetadataEditor';
 import { LyricsListView } from '../LyricsEditor/LyricsListView';
+import { TimestampEditor } from '../LyricsEditor/TimestampEditor';
 import { ExportPanel } from '../UI/ExportPanel';
 import { KeyboardShortcutsModal } from '../UI/KeyboardShortcutsModal';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
@@ -36,6 +37,7 @@ export const AppLayout = () => {
             <Grid.Col span={{ base: 12, md: 4 }}>
               <Stack gap="md">
                 <MetadataEditor />
+                <TimestampEditor />
                 <ExportPanel />
               </Stack>
             </Grid.Col>

@@ -19,6 +19,12 @@ interface AudioStore {
   lyrics: LRCLine[];
   activeLyricIndex: number | null;
 
+  // History state for undo/redo
+  history: LRCLine[][];
+  historyIndex: number;
+  canUndo: boolean;
+  canRedo: boolean;
+
   // Metadata
   metadata: AudioMetadata;
 
@@ -35,11 +41,16 @@ interface AudioStore {
   clearAudioFile: () => void;
 
   // Actions - Lyrics management
-  setLyrics: (lyrics: LRCLine[]) => void;
+  setLyrics: (lyrics: LRCLine[], addToHistory?: boolean) => void;
   updateLyric: (id: string, updates: Partial<LRCLine>) => void;
   addLyricAtCurrentTime: (text?: string) => void;
   deleteLyric: (id: string) => void;
   setActiveLyricIndex: (index: number | null) => void;
+
+  // Actions - History
+  undo: () => void;
+  redo: () => void;
+  pushToHistory: () => void;
 
   // Actions - Metadata
   updateMetadata: (updates: Partial<AudioMetadata>) => void;
@@ -47,6 +58,8 @@ interface AudioStore {
   // Actions - Export
   exportLRC: () => string;
 }
+
+const MAX_HISTORY = 50; // Maximum history entries
 
 export const useAudioStore = create<AudioStore>((set, get) => ({
   // Initial state
@@ -59,6 +72,10 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
   audioUrl: null,
   lyrics: [],
   activeLyricIndex: null,
+  history: [[]],
+  historyIndex: 0,
+  canUndo: false,
+  canRedo: false,
   metadata: {
     title: '',
     artist: '',
@@ -96,14 +113,51 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
   },
 
   // Lyrics management actions
-  setLyrics: (lyrics) => set({ lyrics }),
+  setLyrics: (lyrics, addToHistory = true) => {
+    if (addToHistory) {
+      const state = get();
+      const newHistory = state.history.slice(0, state.historyIndex + 1);
+      newHistory.push(JSON.parse(JSON.stringify(lyrics)));
 
-  updateLyric: (id, updates) =>
-    set((state) => ({
-      lyrics: state.lyrics.map((lyric) =>
-        lyric.id === id ? { ...lyric, ...updates } : lyric
-      ),
-    })),
+      // Limit history size
+      if (newHistory.length > MAX_HISTORY) {
+        newHistory.shift();
+      }
+
+      set({
+        lyrics,
+        history: newHistory,
+        historyIndex: newHistory.length - 1,
+        canUndo: newHistory.length > 1,
+        canRedo: false,
+      });
+    } else {
+      set({ lyrics });
+    }
+  },
+
+  updateLyric: (id, updates) => {
+    const state = get();
+    const newLyrics = state.lyrics.map((lyric) =>
+      lyric.id === id ? { ...lyric, ...updates } : lyric
+    );
+
+    // Add to history
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
 
   addLyricAtCurrentTime: (text = '') => {
     const { currentTime, lyrics } = get();
@@ -112,17 +166,94 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
       timestamp: currentTime,
       text,
     };
+    const newLyrics = [...lyrics, newLyric].sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
+
+    // Add to history
+    const state = get();
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
     set({
-      lyrics: [...lyrics, newLyric].sort((a, b) => a.timestamp - b.timestamp),
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
     });
   },
 
-  deleteLyric: (id) =>
-    set((state) => ({
-      lyrics: state.lyrics.filter((lyric) => lyric.id !== id),
-    })),
+  deleteLyric: (id) => {
+    const state = get();
+    const newLyrics = state.lyrics.filter((lyric) => lyric.id !== id);
+
+    // Add to history
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
 
   setActiveLyricIndex: (index) => set({ activeLyricIndex: index }),
+
+  // History actions
+  undo: () => {
+    const state = get();
+    if (state.historyIndex > 0) {
+      const newIndex = state.historyIndex - 1;
+      set({
+        lyrics: JSON.parse(JSON.stringify(state.history[newIndex])),
+        historyIndex: newIndex,
+        canUndo: newIndex > 0,
+        canRedo: true,
+      });
+    }
+  },
+
+  redo: () => {
+    const state = get();
+    if (state.historyIndex < state.history.length - 1) {
+      const newIndex = state.historyIndex + 1;
+      set({
+        lyrics: JSON.parse(JSON.stringify(state.history[newIndex])),
+        historyIndex: newIndex,
+        canUndo: true,
+        canRedo: newIndex < state.history.length - 1,
+      });
+    }
+  },
+
+  pushToHistory: () => {
+    const state = get();
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(state.lyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
 
   // Metadata actions
   updateMetadata: (updates) =>

@@ -110,9 +110,10 @@ export const useWaveformPlayer = () => {
   );
 
   const addRegionMarker = useCallback(
-    (start: number, color: string = 'rgba(67, 83, 255, 0.3)') => {
+    (start: number, id: string, color: string = 'rgba(67, 83, 255, 0.3)') => {
       if (regionsRef.current) {
         regionsRef.current.addRegion({
+          id,
           start,
           color,
           drag: false,
@@ -123,10 +124,37 @@ export const useWaveformPlayer = () => {
     []
   );
 
+  const clearAllRegions = useCallback(() => {
+    if (regionsRef.current) {
+      regionsRef.current.clearRegions();
+    }
+  }, []);
+
+  const syncRegionsWithLyrics = useCallback(() => {
+    if (!regionsRef.current) return;
+
+    // Clear existing regions
+    regionsRef.current.clearRegions();
+
+    // Add region for each lyric
+    const lyrics = useAudioStore.getState().lyrics;
+    lyrics.forEach((lyric) => {
+      regionsRef.current?.addRegion({
+        id: lyric.id,
+        start: lyric.timestamp,
+        end: lyric.timestamp + 0.1, // Small visual marker
+        color: 'rgba(67, 83, 255, 0.2)',
+        drag: false,
+        resize: false,
+      });
+    });
+  }, []);
+
   return {
     containerRef,
     timelineRef,
     wavesurfer,
+    regionsPlugin: regionsRef.current,
     isReady,
     isPlaying,
     currentTime,
@@ -136,5 +164,7 @@ export const useWaveformPlayer = () => {
     setPlaybackRate,
     setVolume,
     addRegionMarker,
+    clearAllRegions,
+    syncRegionsWithLyrics,
   };
 };
