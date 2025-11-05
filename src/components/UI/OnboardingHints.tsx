@@ -8,7 +8,7 @@ import {
 
 export const OnboardingHints = () => {
   return (
-    <Paper p="xl" withBorder style={{ backgroundColor: 'var(--mantine-color-blue-0)' }}>
+    <Paper p="xl" withBorder bg="var(--mantine-color-blue-light)">
       <Stack gap="md">
         <div>
           <Title order={3} mb="xs">
