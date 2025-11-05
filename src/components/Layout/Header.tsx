@@ -1,5 +1,5 @@
-import { Group, Title, Text, Button, Box, ActionIcon, Tooltip } from '@mantine/core';
-import { IconHelp, IconArrowBackUp, IconArrowForwardUp } from '@tabler/icons-react';
+import { Group, Title, Text, Button, Box, ActionIcon, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { IconHelp, IconArrowBackUp, IconArrowForwardUp, IconSun, IconMoon } from '@tabler/icons-react';
 import { useAudioStore } from '../../stores/audioStore';
 
 interface HeaderProps {
@@ -7,6 +7,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ onShowHelp }: HeaderProps) => {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const canUndo = useAudioStore((state) => state.canUndo);
   const canRedo = useAudioStore((state) => state.canRedo);
   const undo = useAudioStore((state) => state.undo);
@@ -35,6 +36,22 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
         </div>
 
         <Group gap="xs" wrap="nowrap">
+          <Tooltip label={colorScheme === 'dark' ? 'Light mode' : 'Dark mode'}>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={toggleColorScheme}
+              aria-label="Toggle color scheme"
+              style={{ transition: 'all 0.2s' }}
+            >
+              {colorScheme === 'dark' ? (
+                <IconSun size={20} />
+              ) : (
+                <IconMoon size={20} />
+              )}
+            </ActionIcon>
+          </Tooltip>
+
           <Tooltip label="Undo (Cmd/Ctrl+Z)">
             <ActionIcon
               variant="subtle"
