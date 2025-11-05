@@ -18,7 +18,7 @@ import { useAudioStore } from '../../stores/audioStore';
 export const AppLayout = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showRestorePrompt, setShowRestorePrompt] = useState(false);
-  const { wavesurfer } = useWaveformPlayer();
+  const { wavesurfer, togglePlayPause, skip, setPlaybackRate } = useWaveformPlayer();
   const { restore, clear, load } = useAutoSave();
   const lyrics = useAudioStore((state) => state.lyrics);
   const audioUrl = useAudioStore((state) => state.audioUrl);
@@ -26,6 +26,9 @@ export const AppLayout = () => {
 
   useKeyboardShortcuts({
     wavesurfer,
+    togglePlayPause,
+    skip,
+    setPlaybackRate,
     onToggleHelp: () => setShowHelp((prev) => !prev),
   });
 
@@ -52,7 +55,7 @@ export const AppLayout = () => {
     <div>
       <Header onShowHelp={() => setShowHelp(true)} />
 
-      <Container size="xl" py="lg" px="md">
+      <Container size="xl" py="lg" px="md" style={{ paddingBottom: '4rem' }}>
         <Stack gap="lg">
           <FileImportZone />
 
@@ -64,7 +67,7 @@ export const AppLayout = () => {
 
               <PlaybackControls />
 
-              <Grid gutter="lg">
+              <Grid gutter="lg" style={{ alignItems: 'stretch' }}>
                 <Grid.Col span={{ base: 12, md: 4 }}>
                   <Stack gap="md">
                     <MetadataEditor />
@@ -73,7 +76,7 @@ export const AppLayout = () => {
                   </Stack>
                 </Grid.Col>
 
-                <Grid.Col span={{ base: 12, md: 8 }}>
+                <Grid.Col span={{ base: 12, md: 8 }} style={{ display: 'flex' }}>
                   <LyricsListView />
                 </Grid.Col>
               </Grid>

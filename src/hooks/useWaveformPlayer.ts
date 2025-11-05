@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { useWavesurfer } from '@wavesurfer/react';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.esm.js';
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline.esm.js';
@@ -23,10 +23,13 @@ export const useWaveformPlayer = () => {
     barWidth: 2,
     barGap: 1,
     barRadius: 2,
-    plugins: [
-      RegionsPlugin.create(),
-      TimelinePlugin.create(),
-    ],
+    plugins: useMemo(
+      () => [
+        RegionsPlugin.create(),
+        TimelinePlugin.create(),
+      ],
+      []
+    ),
   });
 
   // Sync playback state to store

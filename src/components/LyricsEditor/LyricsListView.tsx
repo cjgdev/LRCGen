@@ -52,8 +52,8 @@ export const LyricsListView = () => {
   }
 
   return (
-    <Stack gap="xs">
-      <Group justify="space-between">
+    <Paper p="md" withBorder style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%', minHeight: '500px' }}>
+      <Group justify="space-between" mb="md">
         <Text fw={500}>Lyrics ({lyrics.length})</Text>
         <Button
           size="xs"
@@ -69,7 +69,7 @@ export const LyricsListView = () => {
         gap="xs"
         ref={listRef}
         style={{
-          maxHeight: 'min(400px, 50vh)',
+          flex: 1,
           overflowY: 'auto',
         }}
       >
@@ -82,6 +82,6 @@ export const LyricsListView = () => {
           </div>
         ))}
       </Stack>
-    </Stack>
+    </Paper>
   );
 };

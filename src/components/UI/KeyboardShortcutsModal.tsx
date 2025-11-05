@@ -23,6 +23,7 @@ export const KeyboardShortcutsModal = ({
       onClose={onClose}
       title={<Title order={3}>Keyboard Shortcuts</Title>}
       size="lg"
+      centered
     >
       <Stack gap="md">
         <Text size="sm" c="dimmed">

@@ -2,12 +2,17 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useAudioStore } from '../stores/audioStore';
 
 interface UseKeyboardShortcutsProps {
-  wavesurfer: any;
+  wavesurfer?: any;
+  togglePlayPause?: () => void;
+  skip?: (seconds: number) => void;
+  setPlaybackRate?: (rate: number) => void;
   onToggleHelp?: () => void;
 }
 
 export const useKeyboardShortcuts = ({
-  wavesurfer,
+  togglePlayPause,
+  skip,
+  setPlaybackRate: setPlaybackRateFn,
   onToggleHelp,
 }: UseKeyboardShortcutsProps) => {
   const addLyricAtCurrentTime = useAudioStore(
@@ -20,21 +25,21 @@ export const useKeyboardShortcuts = ({
     'space, k',
     (e) => {
       e.preventDefault();
-      wavesurfer?.playPause();
+      togglePlayPause?.();
     },
     { enableOnFormTags: false },
-    [wavesurfer]
+    [togglePlayPause]
   );
 
   // Seeking - j, l for 10s, arrows for 5s
-  useHotkeys('j', () => wavesurfer?.skip(-10), [wavesurfer]);
-  useHotkeys('l', () => wavesurfer?.skip(10), [wavesurfer]);
-  useHotkeys('left', () => wavesurfer?.skip(-5), [wavesurfer]);
-  useHotkeys('right', () => wavesurfer?.skip(5), [wavesurfer]);
+  useHotkeys('j', () => skip?.(-10), [skip]);
+  useHotkeys('l', () => skip?.(10), [skip]);
+  useHotkeys('left', () => skip?.(-5), [skip]);
+  useHotkeys('right', () => skip?.(5), [skip]);
 
   // Frame by frame - comma and period
-  useHotkeys(',', () => wavesurfer?.skip(-0.0167), [wavesurfer]); // ~1 frame back
-  useHotkeys('.', () => wavesurfer?.skip(0.0167), [wavesurfer]); // ~1 frame forward
+  useHotkeys(',', () => skip?.(-0.0167), [skip]); // ~1 frame back
+  useHotkeys('.', () => skip?.(0.0167), [skip]); // ~1 frame forward
 
   // Timestamp marking - Enter key
   useHotkeys(
@@ -52,20 +57,20 @@ export const useKeyboardShortcuts = ({
     'shift+comma',
     () => {
       const newRate = Math.max(0.25, playbackRate - 0.25);
-      wavesurfer?.setPlaybackRate(newRate);
+      setPlaybackRateFn?.(newRate);
       useAudioStore.getState().setPlaybackRate(newRate);
     },
-    [wavesurfer, playbackRate]
+    [setPlaybackRateFn, playbackRate]
   );
 
   useHotkeys(
     'shift+period',
     () => {
       const newRate = Math.min(2.0, playbackRate + 0.25);
-      wavesurfer?.setPlaybackRate(newRate);
+      setPlaybackRateFn?.(newRate);
       useAudioStore.getState().setPlaybackRate(newRate);
     },
-    [wavesurfer, playbackRate]
+    [setPlaybackRateFn, playbackRate]
   );
 
   // Help overlay
