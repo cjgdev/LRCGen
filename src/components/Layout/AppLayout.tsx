@@ -18,7 +18,7 @@ import { useAudioStore } from '../../stores/audioStore';
 export const AppLayout = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showRestorePrompt, setShowRestorePrompt] = useState(false);
-  const { wavesurfer, togglePlayPause, skip, setPlaybackRate } = useWaveformPlayer();
+  const { wavesurfer, togglePlayPause, skip, setPlaybackRate, seekTo } = useWaveformPlayer();
   const { restore, clear, load } = useAutoSave();
   const lyrics = useAudioStore((state) => state.lyrics);
   const audioUrl = useAudioStore((state) => state.audioUrl);
@@ -29,6 +29,7 @@ export const AppLayout = () => {
     togglePlayPause,
     skip,
     setPlaybackRate,
+    seekTo,
     onToggleHelp: () => setShowHelp((prev) => !prev),
   });
 

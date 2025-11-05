@@ -6,6 +6,7 @@ interface UseKeyboardShortcutsProps {
   togglePlayPause?: () => void;
   skip?: (seconds: number) => void;
   setPlaybackRate?: (rate: number) => void;
+  seekTo?: (time: number) => void;
   onToggleHelp?: () => void;
 }
 
@@ -13,6 +14,7 @@ export const useKeyboardShortcuts = ({
   togglePlayPause,
   skip,
   setPlaybackRate: setPlaybackRateFn,
+  seekTo,
   onToggleHelp,
 }: UseKeyboardShortcutsProps) => {
   const addLyricAtCurrentTime = useAudioStore(
@@ -75,6 +77,18 @@ export const useKeyboardShortcuts = ({
 
   // Help overlay
   useHotkeys('shift+slash', () => onToggleHelp?.(), [onToggleHelp]);
+
+  // Seek to active lyric - G key
+  useHotkeys(
+    'g',
+    () => {
+      const timestamp = useAudioStore.getState().seekToActiveLyric();
+      if (timestamp !== null) {
+        seekTo?.(timestamp);
+      }
+    },
+    [seekTo]
+  );
 
   // Export - Cmd/Ctrl+S
   useHotkeys(

@@ -34,6 +34,7 @@ export const SHORTCUT_DESCRIPTIONS = {
   ',': 'Frame backward',
   '.': 'Frame forward',
   enter: 'Mark timestamp',
+  g: 'Seek to selected lyric',
   up: 'Navigate up in lyrics',
   down: 'Navigate down in lyrics',
   'shift+,': 'Decrease speed',

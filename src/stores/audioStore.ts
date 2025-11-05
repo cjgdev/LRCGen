@@ -35,6 +35,7 @@ interface AudioStore {
   togglePlayPause: () => void;
   setVolume: (volume: number) => void;
   setPlaybackRate: (rate: number) => void;
+  seekToActiveLyric: () => number | null;
 
   // Actions - File management
   loadAudioFile: (file: File) => void;
@@ -44,6 +45,9 @@ interface AudioStore {
   setLyrics: (lyrics: LRCLine[], addToHistory?: boolean) => void;
   updateLyric: (id: string, updates: Partial<LRCLine>) => void;
   addLyricAtCurrentTime: (text?: string) => void;
+  insertLyricAfter: (id: string) => void;
+  setLyricTimestampToCurrent: (id: string) => void;
+  clearLyricTimestamp: (id: string) => void;
   deleteLyric: (id: string) => void;
   setActiveLyricIndex: (index: number | null) => void;
 
@@ -97,6 +101,19 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
 
   setPlaybackRate: (rate) =>
     set({ playbackRate: Math.max(0.25, Math.min(2.0, rate)) }),
+
+  seekToActiveLyric: () => {
+    const state = get();
+    if (state.activeLyricIndex === null || state.activeLyricIndex < 0) {
+      return null;
+    }
+    const lyric = state.lyrics[state.activeLyricIndex];
+    if (lyric) {
+      set({ currentTime: lyric.timestamp });
+      return lyric.timestamp;
+    }
+    return null;
+  },
 
   // File management actions
   loadAudioFile: (file) => {
@@ -191,6 +208,88 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
   deleteLyric: (id) => {
     const state = get();
     const newLyrics = state.lyrics.filter((lyric) => lyric.id !== id);
+
+    // Add to history
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
+
+  insertLyricAfter: (id) => {
+    const state = get();
+    const index = state.lyrics.findIndex((lyric) => lyric.id === id);
+    if (index === -1) return;
+
+    const newLyric: LRCLine = {
+      id: crypto.randomUUID(),
+      timestamp: 0, // Unassigned timestamp
+      text: '',
+    };
+
+    const newLyrics = [
+      ...state.lyrics.slice(0, index + 1),
+      newLyric,
+      ...state.lyrics.slice(index + 1),
+    ];
+
+    // Add to history
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
+
+  setLyricTimestampToCurrent: (id) => {
+    const state = get();
+    const newLyrics = state.lyrics.map((lyric) =>
+      lyric.id === id
+        ? { ...lyric, timestamp: state.currentTime }
+        : lyric
+    ).sort((a, b) => a.timestamp - b.timestamp);
+
+    // Add to history
+    const newHistory = state.history.slice(0, state.historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newLyrics)));
+
+    if (newHistory.length > MAX_HISTORY) {
+      newHistory.shift();
+    }
+
+    set({
+      lyrics: newLyrics,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      canUndo: newHistory.length > 1,
+      canRedo: false,
+    });
+  },
+
+  clearLyricTimestamp: (id) => {
+    const state = get();
+    const newLyrics = state.lyrics.map((lyric) =>
+      lyric.id === id ? { ...lyric, timestamp: 0 } : lyric
+    );
 
     // Add to history
     const newHistory = state.history.slice(0, state.historyIndex + 1);

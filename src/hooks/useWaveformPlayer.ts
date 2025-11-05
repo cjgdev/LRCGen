@@ -69,7 +69,13 @@ export const useWaveformPlayer = () => {
   }, [wavesurfer]);
 
   const togglePlayPause = useCallback(() => {
-    wavesurfer?.playPause();
+    if (wavesurfer) {
+      if (wavesurfer.isPlaying()) {
+        wavesurfer.pause();
+      } else {
+        wavesurfer.play();
+      }
+    }
   }, [wavesurfer]);
 
   const seekTo = useCallback(

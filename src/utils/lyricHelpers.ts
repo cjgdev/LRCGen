@@ -3,26 +3,54 @@ import type { LRCLine } from '../types/lrc';
 /**
  * Finds the index of the active lyric line at a given time using binary search
  * Returns the index of the last lyric whose timestamp is <= currentTime
- * Returns -1 if no lyric should be active
+ * Special handling: If all lyrics are unassigned (timestamp 0), returns 0 (first lyric)
+ * Skips lyrics with timestamp 0 or timestamps that come before the previous line
  */
 export const findActiveLyric = (
   lyrics: LRCLine[],
   currentTime: number
 ): number => {
-  if (lyrics.length === 0 || currentTime < lyrics[0].timestamp) {
+  if (lyrics.length === 0) {
     return -1;
   }
 
+  // Check if all lyrics have unassigned timestamps (0)
+  const allUnassigned = lyrics.every(lyric => lyric.timestamp === 0);
+  if (allUnassigned) {
+    return 0; // Default to first lyric
+  }
+
+  // Find lyrics with valid assigned timestamps
+  const validLyrics = lyrics
+    .map((lyric, index) => ({ ...lyric, originalIndex: index }))
+    .filter((lyric, index, arr) => {
+      // Keep lyrics with timestamp > 0
+      if (lyric.timestamp === 0) return false;
+      // Keep if first lyric or timestamp is after previous
+      if (index === 0) return lyric.timestamp > 0;
+      return lyric.timestamp >= arr[index - 1].timestamp;
+    });
+
+  if (validLyrics.length === 0) {
+    return 0; // No valid timestamps, default to first
+  }
+
+  // If current time is before first valid timestamp, return 0
+  if (currentTime < validLyrics[0].timestamp) {
+    return 0;
+  }
+
+  // Binary search through valid lyrics
   let left = 0;
-  let right = lyrics.length - 1;
-  let result = -1;
+  let right = validLyrics.length - 1;
+  let result = 0;
 
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
 
-    if (lyrics[mid].timestamp <= currentTime) {
-      result = mid;
-      left = mid + 1; // Look for a later timestamp
+    if (validLyrics[mid].timestamp <= currentTime) {
+      result = validLyrics[mid].originalIndex;
+      left = mid + 1;
     } else {
       right = mid - 1;
     }

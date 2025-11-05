@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { Group, TextInput, ActionIcon, Paper, Text } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { Group, TextInput, ActionIcon, Paper, Text, Tooltip } from '@mantine/core';
+import { IconTrash, IconPlus, IconClock, IconClockOff } from '@tabler/icons-react';
 import type { LRCLine } from '../../types/lrc';
 import { useAudioStore } from '../../stores/audioStore';
 import { formatTimestamp } from '../../utils/timeFormatter';
@@ -13,6 +13,9 @@ interface LyricLineProps {
 export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
   const updateLyric = useAudioStore((state) => state.updateLyric);
   const deleteLyric = useAudioStore((state) => state.deleteLyric);
+  const insertLyricAfter = useAudioStore((state) => state.insertLyricAfter);
+  const setLyricTimestampToCurrent = useAudioStore((state) => state.setLyricTimestampToCurrent);
+  const clearLyricTimestamp = useAudioStore((state) => state.clearLyricTimestamp);
 
   return (
     <Paper
@@ -46,16 +49,58 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
           variant="filled"
         />
 
-        <ActionIcon
-          color="red"
-          variant="subtle"
-          onClick={() => deleteLyric(line.id)}
-          aria-label="Delete line"
-          size="lg"
-          style={{ minWidth: 40, minHeight: 40 }}
-        >
-          <IconTrash size={18} />
-        </ActionIcon>
+        <Group gap={4} wrap="nowrap">
+          <Tooltip label="Insert line after">
+            <ActionIcon
+              variant="subtle"
+              onClick={() => insertLyricAfter(line.id)}
+              aria-label="Insert line after"
+              size="lg"
+              style={{ minWidth: 40, minHeight: 40 }}
+            >
+              <IconPlus size={18} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Set timestamp to current">
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={() => setLyricTimestampToCurrent(line.id)}
+              aria-label="Set timestamp to current"
+              size="lg"
+              style={{ minWidth: 40, minHeight: 40 }}
+            >
+              <IconClock size={18} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Clear timestamp">
+            <ActionIcon
+              variant="subtle"
+              color="orange"
+              onClick={() => clearLyricTimestamp(line.id)}
+              aria-label="Clear timestamp"
+              size="lg"
+              style={{ minWidth: 40, minHeight: 40 }}
+            >
+              <IconClockOff size={18} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Delete line">
+            <ActionIcon
+              color="red"
+              variant="subtle"
+              onClick={() => deleteLyric(line.id)}
+              aria-label="Delete line"
+              size="lg"
+              style={{ minWidth: 40, minHeight: 40 }}
+            >
+              <IconTrash size={18} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
       </Group>
     </Paper>
   );
