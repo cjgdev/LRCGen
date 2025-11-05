@@ -20,15 +20,24 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
         backgroundColor: 'var(--mantine-color-body)',
       }}
     >
-      <Group justify="space-between">
-        <div>
-          <Title order={2}>LRC Editor</Title>
-          <Text size="sm" c="dimmed">
+      <Group justify="space-between" wrap="nowrap">
+        <div style={{ minWidth: 0 }}>
+          <Title order={2} style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)' }}>
+            LRC Editor
+          </Title>
+          <Text
+            size="sm"
+            c="dimmed"
+            style={{
+              display: 'none',
+              '@media (min-width: 768px)': { display: 'block' },
+            }}
+          >
             Create synchronized lyrics for your music
           </Text>
         </div>
 
-        <Group gap="xs">
+        <Group gap="xs" wrap="nowrap">
           <Tooltip label="Undo (Cmd/Ctrl+Z)">
             <ActionIcon
               variant="subtle"
@@ -36,6 +45,7 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
               onClick={undo}
               disabled={!canUndo}
               aria-label="Undo"
+              style={{ transition: 'all 0.2s' }}
             >
               <IconArrowBackUp size={20} />
             </ActionIcon>
@@ -48,6 +58,7 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
               onClick={redo}
               disabled={!canRedo}
               aria-label="Redo"
+              style={{ transition: 'all 0.2s' }}
             >
               <IconArrowForwardUp size={20} />
             </ActionIcon>
@@ -57,9 +68,20 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
             variant="light"
             leftSection={<IconHelp size={16} />}
             onClick={onShowHelp}
+            visibleFrom="sm"
           >
             Shortcuts (?)
           </Button>
+
+          <ActionIcon
+            variant="light"
+            size="lg"
+            onClick={onShowHelp}
+            hiddenFrom="sm"
+            aria-label="Show shortcuts"
+          >
+            <IconHelp size={20} />
+          </ActionIcon>
         </Group>
       </Group>
     </Box>

@@ -150,6 +150,26 @@ export const useWaveformPlayer = () => {
     });
   }, []);
 
+  const zoomIn = useCallback(() => {
+    if (wavesurfer) {
+      const currentZoom = wavesurfer.options.minPxPerSec || 0;
+      wavesurfer.zoom(Math.min(currentZoom + 50, 500));
+    }
+  }, [wavesurfer]);
+
+  const zoomOut = useCallback(() => {
+    if (wavesurfer) {
+      const currentZoom = wavesurfer.options.minPxPerSec || 0;
+      wavesurfer.zoom(Math.max(currentZoom - 50, 0));
+    }
+  }, [wavesurfer]);
+
+  const zoomReset = useCallback(() => {
+    if (wavesurfer) {
+      wavesurfer.zoom(0);
+    }
+  }, [wavesurfer]);
+
   return {
     containerRef,
     timelineRef,
@@ -166,5 +186,8 @@ export const useWaveformPlayer = () => {
     addRegionMarker,
     clearAllRegions,
     syncRegionsWithLyrics,
+    zoomIn,
+    zoomOut,
+    zoomReset,
   };
 };

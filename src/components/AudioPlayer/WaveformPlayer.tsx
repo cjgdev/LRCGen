@@ -1,12 +1,21 @@
 import { useEffect } from 'react';
-import { Box, Paper, Text, Group } from '@mantine/core';
+import { Box, Paper, Text, Group, ActionIcon, Tooltip } from '@mantine/core';
+import { IconZoomIn, IconZoomOut, IconZoomReset } from '@tabler/icons-react';
+import { WaveformSkeleton } from '../UI/WaveformSkeleton';
 import { useWaveformPlayer } from '../../hooks/useWaveformPlayer';
 import { useAudioStore } from '../../stores/audioStore';
 import { formatTime } from '../../utils/timeFormatter';
 
 export const WaveformPlayer = () => {
-  const { containerRef, timelineRef, isReady, syncRegionsWithLyrics } =
-    useWaveformPlayer();
+  const {
+    containerRef,
+    timelineRef,
+    isReady,
+    syncRegionsWithLyrics,
+    zoomIn,
+    zoomOut,
+    zoomReset,
+  } = useWaveformPlayer();
   const currentTime = useAudioStore((state) => state.currentTime);
   const duration = useAudioStore((state) => state.duration);
   const audioUrl = useAudioStore((state) => state.audioUrl);
@@ -34,9 +43,46 @@ export const WaveformPlayer = () => {
           <Text size="sm" fw={500}>
             Waveform
           </Text>
-          <Text size="sm" c="dimmed">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </Text>
+          <Group gap="xs">
+            <Group gap={4}>
+              <Tooltip label="Zoom in">
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  onClick={zoomIn}
+                  disabled={!isReady}
+                  aria-label="Zoom in"
+                >
+                  <IconZoomIn size={16} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Zoom out">
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  onClick={zoomOut}
+                  disabled={!isReady}
+                  aria-label="Zoom out"
+                >
+                  <IconZoomOut size={16} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Reset zoom">
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  onClick={zoomReset}
+                  disabled={!isReady}
+                  aria-label="Reset zoom"
+                >
+                  <IconZoomReset size={16} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+            <Text size="sm" c="dimmed">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </Text>
+          </Group>
         </Group>
       </Box>
 
@@ -50,11 +96,7 @@ export const WaveformPlayer = () => {
 
       <Box ref={timelineRef} mt="xs" />
 
-      {!isReady && (
-        <Text size="sm" c="dimmed" ta="center" mt="md">
-          Loading waveform...
-        </Text>
-      )}
+      {!isReady && <WaveformSkeleton />}
     </Paper>
   );
 };
