@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Container, Grid, Stack, Modal, Text, Group, Button } from '@mantine/core';
 import { Header } from './Header';
+import { BottomBar } from './BottomBar';
 import { FileImportZone } from '../FileImport/FileImportZone';
-import { WaveformPlayer } from '../AudioPlayer/WaveformPlayer';
-import { PlaybackControls } from '../AudioPlayer/PlaybackControls';
 import { MetadataEditor } from '../LyricsEditor/MetadataEditor';
 import { LyricsListView } from '../LyricsEditor/LyricsListView';
 import { TimestampEditor } from '../LyricsEditor/TimestampEditor';
@@ -56,7 +55,7 @@ export const AppLayout = () => {
     <div>
       <Header onShowHelp={() => setShowHelp(true)} />
 
-      <Container size="xl" py="lg" px="md" style={{ paddingBottom: '4rem' }}>
+      <Container size="xl" py="lg" px="md" style={{ paddingBottom: '22rem' }}>
         <Stack gap="lg">
           <FileImportZone />
 
@@ -64,10 +63,6 @@ export const AppLayout = () => {
 
           {!showOnboarding && (
             <>
-              <WaveformPlayer />
-
-              <PlaybackControls />
-
               <Grid gutter="lg" style={{ alignItems: 'stretch' }}>
                 <Grid.Col span={{ base: 12, md: 4 }}>
                   <Stack gap="md">
@@ -110,6 +105,8 @@ export const AppLayout = () => {
           </Group>
         </Stack>
       </Modal>
+
+      <BottomBar />
     </div>
   );
 };

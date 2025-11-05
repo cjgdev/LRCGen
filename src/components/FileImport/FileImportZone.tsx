@@ -11,6 +11,8 @@ export const FileImportZone = () => {
   const setLyrics = useAudioStore((state) => state.setLyrics);
   const updateMetadata = useAudioStore((state) => state.updateMetadata);
   const audioFile = useAudioStore((state) => state.audioFile);
+  const lyrics = useAudioStore((state) => state.lyrics);
+  const hasLyrics = lyrics.length > 0;
 
   const handleAudioDrop = (files: File[]) => {
     const file = files[0];
@@ -89,7 +91,8 @@ export const FileImportZone = () => {
 
   return (
     <Stack gap="md">
-      <Dropzone
+      {!audioFile && (
+        <Dropzone
         onDrop={handleAudioDrop}
         accept={[
           'audio/wav',
@@ -122,7 +125,7 @@ export const FileImportZone = () => {
               fw={500}
               style={{ fontSize: 'clamp(1rem, 4vw, 1.25rem)' }}
             >
-              {audioFile ? audioFile.name : 'Drag audio file here'}
+              Drag audio file here
             </Text>
             <Text
               size="sm"
@@ -131,53 +134,54 @@ export const FileImportZone = () => {
               mt={7}
               style={{ fontSize: 'clamp(0.75rem, 3vw, 0.875rem)' }}
             >
-              {audioFile
-                ? 'Drop a new file to replace'
-                : 'WAV, MP3, AAC, or FLAC (max 100MB)'}
+              WAV, MP3, AAC, or FLAC (max 100MB)
             </Text>
           </div>
         </Group>
       </Dropzone>
+      )}
 
-      <Dropzone
-        onDrop={handleLyricsDrop}
-        accept={['text/plain', '.lrc']}
-        maxSize={1024 * 1024} // 1MB
-        multiple={false}
-      >
-        <Group
-          justify="center"
-          gap="md"
-          style={{ minHeight: 80, pointerEvents: 'none', padding: '0.5rem' }}
+      {!hasLyrics && (
+        <Dropzone
+          onDrop={handleLyricsDrop}
+          accept={['text/plain', '.lrc']}
+          maxSize={1024 * 1024} // 1MB
+          multiple={false}
         >
-          <Dropzone.Accept>
-            <IconUpload size={40} stroke={1.5} />
-          </Dropzone.Accept>
-          <Dropzone.Idle>
-            <IconFileText size={40} stroke={1.5} />
-          </Dropzone.Idle>
+          <Group
+            justify="center"
+            gap="md"
+            style={{ minHeight: 80, pointerEvents: 'none', padding: '0.5rem' }}
+          >
+            <Dropzone.Accept>
+              <IconUpload size={40} stroke={1.5} />
+            </Dropzone.Accept>
+            <Dropzone.Idle>
+              <IconFileText size={40} stroke={1.5} />
+            </Dropzone.Idle>
 
-          <div style={{ textAlign: 'center', flex: 1 }}>
-            <Text
-              size="lg"
-              inline
-              fw={500}
-              style={{ fontSize: 'clamp(0.875rem, 3.5vw, 1.125rem)' }}
-            >
-              Import lyrics (optional)
-            </Text>
-            <Text
-              size="sm"
-              c="dimmed"
-              inline
-              mt={7}
-              style={{ fontSize: 'clamp(0.75rem, 3vw, 0.875rem)' }}
-            >
-              Drop .lrc or .txt file with lyrics
-            </Text>
-          </div>
-        </Group>
-      </Dropzone>
+            <div style={{ textAlign: 'center', flex: 1 }}>
+              <Text
+                size="lg"
+                inline
+                fw={500}
+                style={{ fontSize: 'clamp(0.875rem, 3.5vw, 1.125rem)' }}
+              >
+                Import lyrics (optional)
+              </Text>
+              <Text
+                size="sm"
+                c="dimmed"
+                inline
+                mt={7}
+                style={{ fontSize: 'clamp(0.75rem, 3vw, 0.875rem)' }}
+              >
+                Drop .lrc or .txt file with lyrics
+              </Text>
+            </div>
+          </Group>
+        </Dropzone>
+      )}
     </Stack>
   );
 };

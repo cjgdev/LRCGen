@@ -1,4 +1,4 @@
-import { Modal, Table, Title, Text, Kbd, Stack } from '@mantine/core';
+import { Drawer, Table, Title, Text, Kbd, Stack } from '@mantine/core';
 import { SHORTCUT_DESCRIPTIONS } from '../../constants/keyboardShortcuts';
 
 interface KeyboardShortcutsModalProps {
@@ -18,12 +18,12 @@ export const KeyboardShortcutsModal = ({
   );
 
   return (
-    <Modal
+    <Drawer
       opened={opened}
       onClose={onClose}
       title={<Title order={3}>Keyboard Shortcuts</Title>}
-      size="lg"
-      centered
+      position="right"
+      size="md"
     >
       <Stack gap="md">
         <Text size="sm" c="dimmed">
@@ -50,9 +50,9 @@ export const KeyboardShortcutsModal = ({
         </Table>
 
         <Text size="xs" c="dimmed" ta="center">
-          Press <Kbd>Shift</Kbd> + <Kbd>/</Kbd> to toggle this modal
+          Press <Kbd>Shift</Kbd> + <Kbd>/</Kbd> to toggle this panel
         </Text>
       </Stack>
-    </Modal>
+    </Drawer>
   );
 };

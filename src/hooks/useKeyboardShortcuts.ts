@@ -43,6 +43,33 @@ export const useKeyboardShortcuts = ({
   useHotkeys(',', () => skip?.(-0.0167), [skip]); // ~1 frame back
   useHotkeys('.', () => skip?.(0.0167), [skip]); // ~1 frame forward
 
+  // Navigate lyrics - up/down arrows
+  useHotkeys(
+    'up',
+    (e) => {
+      e.preventDefault();
+      const state = useAudioStore.getState();
+      if (state.lyrics.length === 0) return;
+      const currentIndex = state.activeLyricIndex ?? 0;
+      const newIndex = Math.max(0, currentIndex - 1);
+      state.setActiveLyricIndex(newIndex);
+    },
+    { enableOnFormTags: false }
+  );
+
+  useHotkeys(
+    'down',
+    (e) => {
+      e.preventDefault();
+      const state = useAudioStore.getState();
+      if (state.lyrics.length === 0) return;
+      const currentIndex = state.activeLyricIndex ?? -1;
+      const newIndex = Math.min(state.lyrics.length - 1, currentIndex + 1);
+      state.setActiveLyricIndex(newIndex);
+    },
+    { enableOnFormTags: false }
+  );
+
   // Timestamp marking - Enter key
   useHotkeys(
     'enter',
