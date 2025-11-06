@@ -17,7 +17,7 @@ export const useWaveformPlayer = () => {
   const { wavesurfer, isReady, isPlaying, currentTime } = useWavesurfer({
     container: containerRef,
     url: audioUrl || '',
-    height: 80,
+    height: 40, // Compact height for micro waveform view
     waveColor: '#ddd',
     progressColor: '#4353ff',
     barWidth: 2,

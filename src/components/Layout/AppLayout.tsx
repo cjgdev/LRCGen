@@ -74,7 +74,7 @@ export const AppLayout = () => {
         py="lg"
         px="md"
         style={{
-          paddingBottom: 'clamp(20rem, 25vh, 28rem)' // Responsive bottom padding
+          paddingBottom: 'clamp(6rem, 12vh, 10rem)' // Reduced for compact waveform
         }}
       >
         <Stack gap="lg">
@@ -112,6 +112,7 @@ export const AppLayout = () => {
         onClose={() => setShowRestorePrompt(false)}
         title="Restore previous work?"
         centered
+        zIndex={200}
       >
         <Stack gap="md">
           <Text size="sm">

@@ -183,9 +183,8 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
       timestamp: currentTime,
       text,
     };
-    const newLyrics = [...lyrics, newLyric].sort(
-      (a, b) => a.timestamp - b.timestamp
-    );
+    // Keep lyrics in insertion order (don't auto-sort)
+    const newLyrics = [...lyrics, newLyric];
 
     // Add to history
     const state = get();
@@ -262,11 +261,12 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
 
   setLyricTimestampToCurrent: (id) => {
     const state = get();
+    // Keep lyrics in insertion order (don't auto-sort)
     const newLyrics = state.lyrics.map((lyric) =>
       lyric.id === id
         ? { ...lyric, timestamp: state.currentTime }
         : lyric
-    ).sort((a, b) => a.timestamp - b.timestamp);
+    );
 
     // Add to history
     const newHistory = state.history.slice(0, state.historyIndex + 1);

@@ -1,6 +1,5 @@
-import { Box, Paper, Stack } from '@mantine/core';
-import { WaveformPlayer } from '../AudioPlayer/WaveformPlayer';
-import { PlaybackControls } from '../AudioPlayer/PlaybackControls';
+import { Box } from '@mantine/core';
+import { CompactWaveformPlayer } from '../AudioPlayer/CompactWaveformPlayer';
 
 interface BottomBarProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -40,27 +39,22 @@ export const BottomBar = ({
         borderTop: '1px solid var(--mantine-color-gray-3)',
         backgroundColor: 'var(--mantine-color-body)',
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
+        padding: 'clamp(0.5rem, 1.5vw, 0.75rem)',
       }}
     >
-      <Paper p="xs" radius={0} style={{ padding: 'clamp(0.5rem, 2vw, 1rem)' }}>
-        <Stack gap="sm">
-          <WaveformPlayer
-            containerRef={containerRef}
-            timelineRef={timelineRef}
-            isReady={isReady}
-            syncRegionsWithLyrics={syncRegionsWithLyrics}
-            zoomIn={zoomIn}
-            zoomOut={zoomOut}
-            zoomReset={zoomReset}
-          />
-          <PlaybackControls
-            togglePlayPause={togglePlayPause}
-            skip={skip}
-            setPlaybackRate={setPlaybackRate}
-            setVolume={setVolume}
-          />
-        </Stack>
-      </Paper>
+      <CompactWaveformPlayer
+        containerRef={containerRef}
+        timelineRef={timelineRef}
+        isReady={isReady}
+        togglePlayPause={togglePlayPause}
+        skip={skip}
+        setPlaybackRate={setPlaybackRate}
+        setVolume={setVolume}
+        syncRegionsWithLyrics={syncRegionsWithLyrics}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+        zoomReset={zoomReset}
+      />
     </Box>
   );
 };

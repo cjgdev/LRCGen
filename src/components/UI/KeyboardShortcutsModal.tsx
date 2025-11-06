@@ -24,6 +24,7 @@ export const KeyboardShortcutsModal = ({
       title={<Title order={3}>Keyboard Shortcuts</Title>}
       position="right"
       size="md"
+      zIndex={200}
     >
       <Stack gap="md">
         <Text size="sm" c="dimmed">
