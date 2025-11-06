@@ -17,7 +17,7 @@ export const Header = ({ onShowHelp }: HeaderProps) => {
     <Box
       style={{
         borderBottom: '1px solid var(--mantine-color-gray-3)',
-        padding: '1rem',
+        padding: 'clamp(0.75rem, 2vw, 1rem)',
         backgroundColor: 'var(--mantine-color-body)',
       }}
     >

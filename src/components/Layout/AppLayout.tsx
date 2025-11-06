@@ -17,7 +17,21 @@ import { useAudioStore } from '../../stores/audioStore';
 export const AppLayout = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showRestorePrompt, setShowRestorePrompt] = useState(false);
-  const { wavesurfer, togglePlayPause, skip, setPlaybackRate, seekTo } = useWaveformPlayer();
+  const {
+    containerRef,
+    timelineRef,
+    wavesurfer,
+    isReady,
+    togglePlayPause,
+    skip,
+    setPlaybackRate,
+    setVolume,
+    seekTo,
+    syncRegionsWithLyrics,
+    zoomIn,
+    zoomOut,
+    zoomReset,
+  } = useWaveformPlayer();
   const { restore, clear, load } = useAutoSave();
   const lyrics = useAudioStore((state) => state.lyrics);
   const audioUrl = useAudioStore((state) => state.audioUrl);
@@ -55,7 +69,14 @@ export const AppLayout = () => {
     <div>
       <Header onShowHelp={() => setShowHelp(true)} />
 
-      <Container size="xl" py="lg" px="md" style={{ paddingBottom: '22rem' }}>
+      <Container
+        size="xl"
+        py="lg"
+        px="md"
+        style={{
+          paddingBottom: 'clamp(20rem, 25vh, 28rem)' // Responsive bottom padding
+        }}
+      >
         <Stack gap="lg">
           <FileImportZone />
 
@@ -73,7 +94,7 @@ export const AppLayout = () => {
                 </Grid.Col>
 
                 <Grid.Col span={{ base: 12, md: 8 }} style={{ display: 'flex' }}>
-                  <LyricsListView />
+                  <LyricsListView seekTo={seekTo} />
                 </Grid.Col>
               </Grid>
             </>
@@ -106,7 +127,19 @@ export const AppLayout = () => {
         </Stack>
       </Modal>
 
-      <BottomBar />
+      <BottomBar
+        containerRef={containerRef}
+        timelineRef={timelineRef}
+        isReady={isReady}
+        togglePlayPause={togglePlayPause}
+        skip={skip}
+        setPlaybackRate={setPlaybackRate}
+        setVolume={setVolume}
+        syncRegionsWithLyrics={syncRegionsWithLyrics}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+        zoomReset={zoomReset}
+      />
     </div>
   );
 };

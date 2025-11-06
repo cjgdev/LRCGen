@@ -19,9 +19,10 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
 
   return (
     <Paper
-      p="sm"
+      p="xs"
       withBorder
       style={{
+        padding: 'clamp(0.5rem, 1.5vw, 0.75rem)',
         backgroundColor: isActive ? 'var(--mantine-color-blue-0)' : undefined,
         borderColor: isActive ? 'var(--mantine-color-blue-4)' : undefined,
         transition: 'all 0.2s',
@@ -49,16 +50,16 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
           variant="filled"
         />
 
-        <Group gap={4} wrap="nowrap">
+        <Group gap={2} wrap="nowrap">
           <Tooltip label="Insert line after">
             <ActionIcon
               variant="subtle"
               onClick={() => insertLyricAfter(line.id)}
               aria-label="Insert line after"
-              size="lg"
-              style={{ minWidth: 40, minHeight: 40 }}
+              size="md"
+              style={{ minWidth: 36, minHeight: 36 }}
             >
-              <IconPlus size={18} />
+              <IconPlus size={16} />
             </ActionIcon>
           </Tooltip>
 
@@ -68,10 +69,10 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
               color="blue"
               onClick={() => setLyricTimestampToCurrent(line.id)}
               aria-label="Set timestamp to current"
-              size="lg"
-              style={{ minWidth: 40, minHeight: 40 }}
+              size="md"
+              style={{ minWidth: 36, minHeight: 36 }}
             >
-              <IconClock size={18} />
+              <IconClock size={16} />
             </ActionIcon>
           </Tooltip>
 
@@ -81,10 +82,10 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
               color="orange"
               onClick={() => clearLyricTimestamp(line.id)}
               aria-label="Clear timestamp"
-              size="lg"
-              style={{ minWidth: 40, minHeight: 40 }}
+              size="md"
+              style={{ minWidth: 36, minHeight: 36 }}
             >
-              <IconClockOff size={18} />
+              <IconClockOff size={16} />
             </ActionIcon>
           </Tooltip>
 
@@ -94,10 +95,10 @@ export const LyricLineComponent = ({ line, isActive }: LyricLineProps) => {
               variant="subtle"
               onClick={() => deleteLyric(line.id)}
               aria-label="Delete line"
-              size="lg"
-              style={{ minWidth: 40, minHeight: 40 }}
+              size="md"
+              style={{ minWidth: 36, minHeight: 36 }}
             >
-              <IconTrash size={18} />
+              <IconTrash size={16} />
             </ActionIcon>
           </Tooltip>
         </Group>

@@ -2,7 +2,33 @@ import { Box, Paper, Stack } from '@mantine/core';
 import { WaveformPlayer } from '../AudioPlayer/WaveformPlayer';
 import { PlaybackControls } from '../AudioPlayer/PlaybackControls';
 
-export const BottomBar = () => {
+interface BottomBarProps {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  timelineRef: React.RefObject<HTMLDivElement | null>;
+  isReady: boolean;
+  togglePlayPause: () => void;
+  skip: (seconds: number) => void;
+  setPlaybackRate: (rate: number) => void;
+  setVolume: (volume: number) => void;
+  syncRegionsWithLyrics: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  zoomReset: () => void;
+}
+
+export const BottomBar = ({
+  containerRef,
+  timelineRef,
+  isReady,
+  togglePlayPause,
+  skip,
+  setPlaybackRate,
+  setVolume,
+  syncRegionsWithLyrics,
+  zoomIn,
+  zoomOut,
+  zoomReset,
+}: BottomBarProps) => {
   return (
     <Box
       style={{
@@ -16,10 +42,23 @@ export const BottomBar = () => {
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Paper p="md" radius={0}>
-        <Stack gap="md">
-          <WaveformPlayer />
-          <PlaybackControls />
+      <Paper p="xs" radius={0} style={{ padding: 'clamp(0.5rem, 2vw, 1rem)' }}>
+        <Stack gap="sm">
+          <WaveformPlayer
+            containerRef={containerRef}
+            timelineRef={timelineRef}
+            isReady={isReady}
+            syncRegionsWithLyrics={syncRegionsWithLyrics}
+            zoomIn={zoomIn}
+            zoomOut={zoomOut}
+            zoomReset={zoomReset}
+          />
+          <PlaybackControls
+            togglePlayPause={togglePlayPause}
+            skip={skip}
+            setPlaybackRate={setPlaybackRate}
+            setVolume={setVolume}
+          />
         </Stack>
       </Paper>
     </Box>

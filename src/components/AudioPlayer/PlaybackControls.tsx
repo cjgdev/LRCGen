@@ -6,22 +6,32 @@ import {
   IconPlayerSkipForward,
 } from '@tabler/icons-react';
 import { useAudioStore } from '../../stores/audioStore';
-import { useWaveformPlayer } from '../../hooks/useWaveformPlayer';
 
-export const PlaybackControls = () => {
-  const { wavesurfer, togglePlayPause, skip } = useWaveformPlayer();
+interface PlaybackControlsProps {
+  togglePlayPause: () => void;
+  skip: (seconds: number) => void;
+  setPlaybackRate: (rate: number) => void;
+  setVolume: (volume: number) => void;
+}
+
+export const PlaybackControls = ({
+  togglePlayPause,
+  skip,
+  setPlaybackRate: setPlaybackRateFn,
+  setVolume: setVolumeFn,
+}: PlaybackControlsProps) => {
   const isPlaying = useAudioStore((state) => state.isPlaying);
   const volume = useAudioStore((state) => state.volume);
   const playbackRate = useAudioStore((state) => state.playbackRate);
   const audioUrl = useAudioStore((state) => state.audioUrl);
 
   const handleVolumeChange = (value: number) => {
-    wavesurfer?.setVolume(value);
+    setVolumeFn(value);
     useAudioStore.getState().setVolume(value);
   };
 
   const handlePlaybackRateChange = (value: number) => {
-    wavesurfer?.setPlaybackRate(value);
+    setPlaybackRateFn(value);
     useAudioStore.getState().setPlaybackRate(value);
   };
 

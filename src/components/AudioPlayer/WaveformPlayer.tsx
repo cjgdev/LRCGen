@@ -2,20 +2,28 @@ import { useEffect } from 'react';
 import { Box, Paper, Text, Group, ActionIcon, Tooltip } from '@mantine/core';
 import { IconZoomIn, IconZoomOut, IconZoomReset } from '@tabler/icons-react';
 import { WaveformSkeleton } from '../UI/WaveformSkeleton';
-import { useWaveformPlayer } from '../../hooks/useWaveformPlayer';
 import { useAudioStore } from '../../stores/audioStore';
 import { formatTime } from '../../utils/timeFormatter';
 
-export const WaveformPlayer = () => {
-  const {
-    containerRef,
-    timelineRef,
-    isReady,
-    syncRegionsWithLyrics,
-    zoomIn,
-    zoomOut,
-    zoomReset,
-  } = useWaveformPlayer();
+interface WaveformPlayerProps {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  timelineRef: React.RefObject<HTMLDivElement | null>;
+  isReady: boolean;
+  syncRegionsWithLyrics: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  zoomReset: () => void;
+}
+
+export const WaveformPlayer = ({
+  containerRef,
+  timelineRef,
+  isReady,
+  syncRegionsWithLyrics,
+  zoomIn,
+  zoomOut,
+  zoomReset,
+}: WaveformPlayerProps) => {
   const currentTime = useAudioStore((state) => state.currentTime);
   const duration = useAudioStore((state) => state.duration);
   const audioUrl = useAudioStore((state) => state.audioUrl);
@@ -37,7 +45,7 @@ export const WaveformPlayer = () => {
   }
 
   return (
-    <Paper p="md" withBorder>
+    <Paper p="xs" withBorder style={{ padding: 'clamp(0.5rem, 2vw, 1rem)' }}>
       <Box mb="xs">
         <Group justify="space-between" wrap="nowrap">
           <Text size="sm" fw={500}>

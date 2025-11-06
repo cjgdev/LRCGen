@@ -2,11 +2,14 @@ import { useEffect, useRef } from 'react';
 import { Stack, Text, Paper, Button, Group, Tooltip, ActionIcon } from '@mantine/core';
 import { IconPlus, IconPlayerSkipForward } from '@tabler/icons-react';
 import { useAudioStore } from '../../stores/audioStore';
-import { useWaveformPlayer } from '../../hooks/useWaveformPlayer';
 import { LyricLine } from './LyricLine';
 import { findActiveLyric } from '../../utils/lyricHelpers';
 
-export const LyricsListView = () => {
+interface LyricsListViewProps {
+  seekTo: (time: number) => void;
+}
+
+export const LyricsListView = ({ seekTo }: LyricsListViewProps) => {
   const lyrics = useAudioStore((state) => state.lyrics);
   const activeLyricIndex = useAudioStore((state) => state.activeLyricIndex);
   const addLyricAtCurrentTime = useAudioStore(
@@ -14,7 +17,6 @@ export const LyricsListView = () => {
   );
   const seekToActiveLyric = useAudioStore((state) => state.seekToActiveLyric);
   const currentTime = useAudioStore((state) => state.currentTime);
-  const { seekTo } = useWaveformPlayer();
 
   const listRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
